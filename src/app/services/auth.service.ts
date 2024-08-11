@@ -14,8 +14,18 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router, private jwtHelper: JwtHelperService) {}
 
+  private isLocalStorageAvailable(): boolean {
+    try {
+      const test = '__localStorageTest__';
+      localStorage.setItem(test, test);
+      localStorage.removeItem(test);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   login(credentials: { email: string, clave: string }) {
-    // Sanitizar entradas
     const sanitizedCredentials = {
       email: credentials.email.trim(),
       clave: credentials.clave.trim()
@@ -27,12 +37,14 @@ export class AuthService {
         return throwError(error);
       })
     ).subscribe((response: any) => {
-      // Validar la estructura de la respuesta
       if (response && response.token && response.user) {
         const token = response.token;
-        // Validar el token JWT
         if (!this.jwtHelper.isTokenExpired(token)) {
-          localStorage.setItem(this.tokenKey, token);
+          if (this.isLocalStorageAvailable()) {
+            localStorage.setItem(this.tokenKey, token);
+          } else {
+            console.error('localStorage is not available');
+          }
           this.router.navigate(['/']);
         } else {
           console.error('Token is expired');
@@ -44,12 +56,17 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem(this.tokenKey);
+    if (this.isLocalStorageAvailable()) {
+      localStorage.removeItem(this.tokenKey);
+    }
     this.router.navigate(['/login']);
   }
 
   isAuthenticated(): boolean {
-    const token = localStorage.getItem(this.tokenKey);
-    return token !== null && !this.jwtHelper.isTokenExpired(token);
+    if (this.isLocalStorageAvailable()) {
+      const token = localStorage.getItem(this.tokenKey);
+      return token !== null && !this.jwtHelper.isTokenExpired(token);
+    }
+    return false;
   }
 }
