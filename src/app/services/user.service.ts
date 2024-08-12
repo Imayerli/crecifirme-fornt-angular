@@ -45,6 +45,7 @@ export class UserService {
         if (!this.jwtHelper.isTokenExpired(token)) {
           if (this.isLocalStorageAvailable()) {
             localStorage.setItem(this.tokenKey, token);
+            localStorage.setItem('user', JSON.stringify(this.user));
           } else {
             console.error('localStorage is not available');
           }
@@ -78,6 +79,12 @@ export class UserService {
   }
 
   getUser(): User  {
+    if (this.isLocalStorageAvailable()) {
+      const user = localStorage.getItem('user');
+      if (user) {
+        this.user = JSON.parse(user);
+      }
+    }
     return this.user;
   }
 
