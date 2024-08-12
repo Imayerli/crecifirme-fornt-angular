@@ -3,14 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import {Observable, throwError} from 'rxjs';
+import {User} from "../model/User";
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class UserService {
   private apiUrl = 'http://localhost:8080/usuarios';
   private tokenKey = 'auth-token';
+  private user: User | undefined;
 
   constructor(private http: HttpClient, private router: Router, private jwtHelper: JwtHelperService) {}
 
@@ -42,6 +44,7 @@ export class AuthService {
         if (!this.jwtHelper.isTokenExpired(token)) {
           if (this.isLocalStorageAvailable()) {
             localStorage.setItem(this.tokenKey, token);
+            localStorage.setItem('userId', response.user.$id);
           } else {
             console.error('localStorage is not available');
           }
@@ -69,4 +72,14 @@ export class AuthService {
     }
     return false;
   }
+
+  register(user: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}`, user);
+  }
+
+  updateUser( user: any): Observable<any> {
+    const id = localStorage.getItem('userId');
+    return this.http.put(`/api/usuarios/${id}`, user);
+  }
+
 }

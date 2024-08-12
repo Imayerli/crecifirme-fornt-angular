@@ -12,6 +12,12 @@
         <li class="nav-item" *ngIf="!authService.isAuthenticated()">
           <a class="nav-link" data-toggle="modal" data-target="#loginModal">Login</a>
         </li>
+        <li class="nav-item" *ngIf="!authService.isAuthenticated()">
+          <a class="nav-link" routerLink="/register">Register</a>
+        </li>
+        <li class="nav-item" *ngIf="authService.isAuthenticated()">
+          <a class="nav-link" routerLink="/update-user/">Update User</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/inicio">Inicio</a>
         </li>

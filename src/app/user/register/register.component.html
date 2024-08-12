@@ -1,0 +1,35 @@
+<!-- src/app/register/register.component.html -->
+<div class="container">
+  <h2>Register</h2>
+  <form (ngSubmit)="register()">
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input type="text" class="form-control" id="nombre" [(ngModel)]="user.nombre" name="nombre" required>
+    </div>
+    <div class="form-group">
+      <label for="edad">Edad</label>
+      <input type="number" class="form-control" id="edad" [(ngModel)]="user.edad" name="edad" required>
+    </div>
+    <div class="form-group">
+      <label for="estadoCivil">Estado Civil</label>
+      <input type="text" class="form-control" id="estadoCivil" [(ngModel)]="user.estadoCivil" name="estadoCivil" required>
+    </div>
+    <div class="form-group">
+      <label for="ingresosMensuales">Ingresos Mensuales</label>
+      <input type="number" class="form-control" id="ingresosMensuales" [(ngModel)]="user.ingresosMensuales" name="ingresosMensuales" required>
+    </div>
+    <div class="form-group">
+      <label for="preferenciasFinancieras">Preferencias Financieras</label>
+      <input type="text" class="form-control" id="preferenciasFinancieras" [(ngModel)]="user.preferenciasFinancieras" name="preferenciasFinancieras">
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" class="form-control" id="email" [(ngModel)]="user.email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="clave">Clave</label>
+      <input type="password" class="form-control" id="clave" [(ngModel)]="user.clave" name="clave" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+  </form>
+</div>

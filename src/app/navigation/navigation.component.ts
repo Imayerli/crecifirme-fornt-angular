@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-navigation',
@@ -7,7 +7,7 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./navigation.component.css']
 })
 export class NavigationComponent {
-  constructor(public authService: AuthService) {}
+  constructor(public authService: UserService) {}
 
   logout() {
     this.authService.logout();
