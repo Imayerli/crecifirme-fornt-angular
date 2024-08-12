@@ -1,11 +1,25 @@
-<form (ngSubmit)="login()">
-  <div>
-    <label for="email">Email:</label>
-    <input type="email" id="email" [(ngModel)]="credentials.email" name="email" required>
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Login</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="login()">
+          <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" class="form-control" [(ngModel)]="credentials.email" name="email" required>
+          </div>
+          <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" class="form-control" [(ngModel)]="credentials.clave" name="password" required>
+          </div>
+          <button class="form-control" type="submit">Login</button>
+        </form>
+      </div>
+    </div>
   </div>
-  <div>
-    <label for="password">Password:</label>
-    <input type="password" id="password" [(ngModel)]="credentials.clave" name="password" required>
-  </div>
-  <button type="submit">Login</button>
-</form>
+</div>

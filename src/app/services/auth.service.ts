@@ -45,7 +45,7 @@ export class AuthService {
           } else {
             console.error('localStorage is not available');
           }
-          this.router.navigate(['/']);
+          this.router.navigate(['/home']);
         } else {
           console.error('Token is expired');
         }
@@ -59,7 +59,7 @@ export class AuthService {
     if (this.isLocalStorageAvailable()) {
       localStorage.removeItem(this.tokenKey);
     }
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 
   isAuthenticated(): boolean {
