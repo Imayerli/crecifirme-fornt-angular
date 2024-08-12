@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Renderer2 } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,9 +10,22 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent {
   credentials = { email: '', clave: '' };
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private renderer: Renderer2,
+    private el: ElementRef,
+    private router: Router
+  ) {}
 
-  login() {
-    this.authService.login(this.credentials);
+  async login() {
+    try {
+      const response = await this.authService.login(this.credentials);
+      console.log('Login successful', response);
+      const modal = this.el.nativeElement.querySelector('#loginModal');
+      this.renderer.setStyle(modal, 'display', 'none'); // Hide the modal after successful login
+      this.router.navigate([this.router.url]); // Reload the page
+    } catch (error) {
+      console.error('Login failed', error);
+    }
   }
 }

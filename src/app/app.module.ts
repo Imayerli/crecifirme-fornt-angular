@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { FormsModule } from '@angular/forms';
+import { WelcomeComponent } from './welcome/welcome.component';
+import { NavigationComponent } from  './navigation/navigation.component';
 
 export function tokenGetter() {
   return localStorage.getItem('auth-token');
@@ -17,7 +19,9 @@ export function tokenGetter() {
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    WelcomeComponent,
+    NavigationComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +31,7 @@ export function tokenGetter() {
       config: {
         tokenGetter: tokenGetter,
         allowedDomains: ['your-api-url.com'],
-        disallowedRoutes: ['your-api-url.com/login']
+        disallowedRoutes: ['your-api-url.com/']
       }
     })
   ],

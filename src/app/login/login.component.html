@@ -1,5 +1,5 @@
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Center and enlarge the modal -->
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="loginModalLabel">Login</h5>
@@ -9,15 +9,15 @@
       </div>
       <div class="modal-body">
         <form (ngSubmit)="login()">
-          <div>
+          <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" id="email" class="form-control" [(ngModel)]="credentials.email" name="email" required>
           </div>
-          <div>
+          <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" id="password" class="form-control" [(ngModel)]="credentials.clave" name="password" required>
           </div>
-          <button class="form-control" type="submit">Login</button>
+          <button type="submit" class="btn btn-primary">Iniciar sesión</button>
         </form>
       </div>
     </div>
