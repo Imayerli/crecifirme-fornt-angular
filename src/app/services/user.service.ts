@@ -12,7 +12,7 @@ import {User} from "../model/User";
 export class UserService {
   private apiUrl = 'http://localhost:8080/usuarios';
   private tokenKey = 'auth-token';
-  private user: User | undefined;
+  private user: User = {} as User;
 
   constructor(private http: HttpClient, private router: Router, private jwtHelper: JwtHelperService) {}
 
@@ -41,10 +41,10 @@ export class UserService {
     ).subscribe((response: any) => {
       if (response && response.token && response.user) {
         const token = response.token;
+        this.user = response.user;
         if (!this.jwtHelper.isTokenExpired(token)) {
           if (this.isLocalStorageAvailable()) {
             localStorage.setItem(this.tokenKey, token);
-            localStorage.setItem('userId', response.user.$id);
           } else {
             console.error('localStorage is not available');
           }
@@ -77,9 +77,12 @@ export class UserService {
     return this.http.post(`${this.apiUrl}`, user);
   }
 
+  getUser(): User  {
+    return this.user;
+  }
+
   updateUser( user: any): Observable<any> {
-    const id = localStorage.getItem('userId');
-    return this.http.put(`/api/usuarios/${id}`, user);
+    return this.http.put(`/api/usuarios/${user.id}`, user);
   }
 
 }

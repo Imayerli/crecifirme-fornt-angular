@@ -1,15 +1,17 @@
-// src/app/update-user/update-user.component.ts
-import { Component } from '@angular/core';
+// src/app/user/update/update.component.ts
+import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import {User} from "../../model/User";
 
 @Component({
   selector: 'app-update',
   templateUrl: './update.component.html',
   styleUrls: ['./update.component.css']
 })
-export class UpdateComponent {
-  user = {
+export class UpdateComponent implements OnInit {
+  user: User = {
+    id: 0,
     nombre: '',
     edad: null,
     estadoCivil: '',
@@ -25,8 +27,10 @@ export class UpdateComponent {
     private route: ActivatedRoute
   ) {}
 
-  async ngOnInit() {
+  ngOnInit(): void {
+    this.user =  this.userService.getUser();
   }
+
 
   async update() {
     try {
