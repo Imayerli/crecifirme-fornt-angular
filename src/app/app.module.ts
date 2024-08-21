@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './user/login/login.component';
 import { HomeComponent } from './home/home.component';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { NavigationComponent } from  './navigation/navigation.component';
 import { RegisterComponent } from './user/register/register.component';
@@ -37,7 +37,8 @@ export function tokenGetter() {
         allowedDomains: ['your-api-url.com'],
         disallowedRoutes: ['your-api-url.com/']
       }
-    })
+    }),
+    ReactiveFormsModule
   ],
   providers: [
     provideClientHydration(),

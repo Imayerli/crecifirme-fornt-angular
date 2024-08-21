@@ -1,35 +1,71 @@
 <!-- src/app/register/register.component.html -->
 <div class="container">
   <h2>Register</h2>
-  <form (ngSubmit)="register()">
-    <div class="form-group">
-      <label for="nombre">Nombre</label>
-      <input type="text" class="form-control" id="nombre" [(ngModel)]="user.nombre" name="nombre" required>
+  <div class="card mt-3">
+    <div class="card-body">
+    <form (ngSubmit)="register()">
+      <div *ngIf="activeStepIndex === 0">
+        <h4>Datos Personales</h4>
+        <div class="form-group">
+          <label for="nombre">Nombre:</label>
+          <input type="text" class="form-control" id="nombre" [(ngModel)]="user.nombre" name="nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="edad">Edad:</label>
+          <input type="number" class="form-control" id="edad" [(ngModel)]="user.edad" name="edad" required>
+        </div>
+        <div class="form-group">
+          <label>Estado Civil:</label>
+          <select class="form-select" aria-label="Default select example"  [(ngModel)]="user.estadoCivil" name="estadoCivil" required>
+            <option selected>Open this select menu</option>
+            <option value="Soltero">Sontero (a)</option>
+            <option value="Casado">Casdo (a)</option>
+            <option value="UNL">Union libre</option>
+          </select>
+       </div>
+        <div class="form-group">
+          <label for="ingresosMensuales">Ingresos Mensuales:</label>
+          <input type="number" class="form-control" id="ingresosMensuales" [(ngModel)]="user.ingresosMensuales" name="ingresosMensuales" required>
+        </div>
+      </div>
+
+      <div *ngIf="activeStepIndex === 1">
+        <h4>Cuenta</h4>
+        <div class="form-group">
+          <label for="email2">Email:</label>
+          <input type="email" class="form-control" id="email2" [(ngModel)]="user.email" name="email2" required>
+        </div>
+        <div class="form-group">
+          <label for="clave2">Clave:</label>
+          <input type="password" class="form-control" id="clave2" [(ngModel)]="user.clave" name="clave2" required>
+        </div>
+      </div>
+
+
+      <div *ngIf="activeStepIndex === 2">
+        <h4>Configuraciones</h4>
+        <div formArrayName="configuraciones">
+          <div *ngFor="let configuracion of configuracionesFormArray.controls; let i = index" [formGroupName]="i" class="mb-3">
+            <h5>{{ configuracion.value.tipoConfiguracion }} - {{ configuracion.value.clasificacionConfiguracion }}</h5>
+            <div *ngFor="let key of objectKeys(configuracion.value.datosConfiguracion)">
+              <label>{{ key }}:</label>
+              <input class="form-control" *ngIf="isString(configuracion.value.datosConfiguracion[key])" class="form-control">
+              <div *ngIf="isArray(configuracion.value.datosConfiguracion[key])">
+                <label *ngFor="let item of configuracion.value.datosConfiguracion[key]">{{ item }}</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="mt-3">
+        <button type="button" class="btn btn-secondary" (click)="previousStep()" [disabled]="activeStepIndex === 0">Anterior</button>
+        <button type="button" class="btn btn-primary" (click)="nextStep()" *ngIf="activeStepIndex < steps.length - 1">Siguiente</button>
+        <button type="submit" class="btn btn-success" *ngIf="activeStepIndex === steps.length - 1">Registrar</button>
+      </div>
+    </form>
     </div>
-    <div class="form-group">
-      <label for="edad">Edad</label>
-      <input type="number" class="form-control" id="edad" [(ngModel)]="user.edad" name="edad" required>
-    </div>
-    <div class="form-group">
-      <label for="estadoCivil">Estado Civil</label>
-      <input type="text" class="form-control" id="estadoCivil" [(ngModel)]="user.estadoCivil" name="estadoCivil" required>
-    </div>
-    <div class="form-group">
-      <label for="ingresosMensuales">Ingresos Mensuales</label>
-      <input type="number" class="form-control" id="ingresosMensuales" [(ngModel)]="user.ingresosMensuales" name="ingresosMensuales" required>
-    </div>
-    <div class="form-group">
-      <label for="preferenciasFinancieras">Preferencias Financieras</label>
-      <input type="text" class="form-control" id="preferenciasFinancieras" [(ngModel)]="user.preferenciasFinancieras" name="preferenciasFinancieras">
-    </div>
-    <div class="form-group">
-      <label for="email2">Email</label>
-      <input type="email" class="form-control" id="email2" [(ngModel)]="user.email" name="email2" required>
-    </div>
-    <div class="form-group">
-      <label for="clave2">Clave</label>
-      <input type="password" class="form-control" id="clave2" [(ngModel)]="user.clave" name="clave2" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Register</button>
-  </form>
+  </div>
 </div>
+
