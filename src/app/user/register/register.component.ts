@@ -1,10 +1,10 @@
-// src/app/register/register.component.ts
-import {Component, OnInit} from '@angular/core';
+// src/app/user/register/register.component.ts
+import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
-import {Configuracion} from "../../model/Configuracion";
-import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ConfiguracionService} from "../../services/configuracion.service";
+import { Configuracion } from '../../model/Configuracion';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ConfiguracionService } from '../../services/configuracion.service';
 
 @Component({
   selector: 'app-register',
@@ -13,10 +13,11 @@ import {ConfiguracionService} from "../../services/configuracion.service";
 })
 export class RegisterComponent implements OnInit {
   registroForm: FormGroup;
-  configuraciones: Configuracion[] = [];
+  configuraciones: { [key: string]: Configuracion[] } = {};
   activeStepIndex = 0;
   steps = ['Datos Personales', 'Cuenta', 'Configuraciones'];
-
+  tiposConfiguracion: string[] = ['Notificaciones', 'Alertas', 'ContenidosFinancieros', 'PreferenciasFinancieras'];
+  activeTipoIndex = 0;
   user = {
     nombre: '',
     edad: null,
@@ -27,7 +28,7 @@ export class RegisterComponent implements OnInit {
     clave: ''
   };
 
-  constructor(private authService: UserService, private router: Router,private fb: FormBuilder, private configuracionService: ConfiguracionService) {
+  constructor(private authService: UserService, private router: Router, private fb: FormBuilder, private configuracionService: ConfiguracionService) {
     this.registroForm = this.fb.group({
       nombre: ['', Validators.required],
       edad: ['', Validators.required],
@@ -40,9 +41,11 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.configuracionService.getConfiguraciones().subscribe((data: Configuracion[]) => {
-      this.configuraciones = data;
-      this.initConfiguraciones();
+    this.tiposConfiguracion.forEach(tipo => {
+      this.configuracionService.getConfiguracionesByTipo(tipo).subscribe((data: Configuracion[]) => {
+        this.configuraciones[tipo] = data;
+        this.initConfiguraciones();
+      });
     });
   }
 
@@ -61,14 +64,18 @@ export class RegisterComponent implements OnInit {
   }
 
   initConfiguraciones() {
-    this.configuraciones.forEach(config => {
-      const group = this.fb.group({
-        preferenciasID: [config.preferenciasID],
-        tipoConfiguracion: [config.tipoConfiguracion],
-        clasificacionConfiguracion: [config.clasificacionConfiguracion],
-        datosConfiguracion: this.fb.group(config.datosConfiguracion)
+    this.tiposConfiguracion.forEach(tipo => {
+      const configs = this.configuraciones[tipo] || [];
+      configs.forEach(config => {
+        const group = this.fb.group({
+          preferenciasID: [config.preferenciasID],
+          tipoConfiguracion: [config.tipoConfiguracion],
+          clasificacionConfiguracion: [config.clasificacionConfiguracion],
+          datosConfiguracion: this.fb.group(config.datosConfiguracion),
+          selected: [false]
+        });
+        this.configuracionesFormArray.push(group);
       });
-      this.configuracionesFormArray.push(group);
     });
   }
 
@@ -81,6 +88,18 @@ export class RegisterComponent implements OnInit {
   previousStep() {
     if (this.activeStepIndex > 0) {
       this.activeStepIndex--;
+    }
+  }
+
+  nextTipo() {
+    if (this.activeTipoIndex < this.tiposConfiguracion.length - 1) {
+      this.activeTipoIndex++;
+    }
+  }
+
+  previousTipo() {
+    if (this.activeTipoIndex > 0) {
+      this.activeTipoIndex--;
     }
   }
 
@@ -99,5 +118,16 @@ export class RegisterComponent implements OnInit {
 
   objectKeys(obj: any): string[] {
     return Object.keys(obj);
+  }
+
+  getFilteredConfiguraciones(tipo: string): FormArray {
+    const formArray = this.fb.array([]);
+    this.configuracionesFormArray.controls.forEach(control => {
+      if (control.value.tipoConfiguracion === tipo) {
+        // @ts-ignore
+        formArray.push(control);
+      }
+    });
+    return formArray;
   }
 }

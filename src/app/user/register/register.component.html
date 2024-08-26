@@ -45,14 +45,29 @@
       <div *ngIf="activeStepIndex === 2">
         <h4>Configuraciones</h4>
         <div formArrayName="configuraciones">
-          <div *ngFor="let configuracion of configuracionesFormArray.controls; let i = index" [formGroupName]="i" class="mb-3">
-            <h5>{{ configuracion.value.tipoConfiguracion }} - {{ configuracion.value.clasificacionConfiguracion }}</h5>
-            <div *ngFor="let key of objectKeys(configuracion.value.datosConfiguracion)">
-              <label>{{ key }}:</label>
-              <input class="form-control" *ngIf="isString(configuracion.value.datosConfiguracion[key])" class="form-control">
-              <div *ngIf="isArray(configuracion.value.datosConfiguracion[key])">
-                <label *ngFor="let item of configuracion.value.datosConfiguracion[key]">{{ item }}</label>
+          <div *ngFor="let tipo of tiposConfiguracion; let tipoIndex = index" class="mb-4">
+            <div *ngIf="tipoIndex === activeTipoIndex" class="card">
+              <div class="card-header">
+                <h5 class="mb-0">{{ tipo }}</h5>
               </div>
+              <div class="card-body">
+                <div *ngFor="let configuracion of getFilteredConfiguraciones(tipo).controls; let i = index" [formGroupName]="i" class="mb-3">
+                  <input type="checkbox" class="form-check-input" [formControlName]="'selected'" [value]="configuracion.value.preferenciasID">
+                  <label class="form-check-label">
+                    {{ configuracion.value.tipoConfiguracion }} - {{ configuracion.value.clasificacionConfiguracion }}
+                  </label>
+
+                  <ul>
+                    <li *ngFor="let key of objectKeys(configuracion.value.datosConfiguracion)" class="list-group-item">
+                      {{ key }}: {{ configuracion.value.datosConfiguracion[key] }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="tipoIndex === activeTipoIndex" class="mt-3">
+              <button type="button" class="btn btn-secondary" (click)="previousTipo()" [disabled]="activeTipoIndex === 0">Anterior</button>
+              <button type="button" class="btn btn-primary" (click)="nextTipo()" [disabled]="activeTipoIndex === tiposConfiguracion.length - 1">Siguiente</button>
             </div>
           </div>
         </div>
