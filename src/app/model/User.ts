@@ -9,7 +9,6 @@ export interface User {
   clave: string;
 }
 
-
 export interface UserResponse {
   token: string;
   user: User;

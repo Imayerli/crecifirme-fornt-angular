@@ -1,86 +1,113 @@
 <!-- src/app/register/register.component.html -->
 <div class="container">
-  <h2>Register</h2>
-  <div class="card mt-3">
-    <div class="card-body">
-    <form (ngSubmit)="register()">
-      <div *ngIf="activeStepIndex === 0">
-        <h4>Datos Personales</h4>
-        <div class="form-group">
-          <label for="nombre">Nombre:</label>
-          <input type="text" class="form-control" id="nombre" [(ngModel)]="user.nombre" name="nombre" required>
-        </div>
-        <div class="form-group">
-          <label for="edad">Edad:</label>
-          <input type="number" class="form-control" id="edad" [(ngModel)]="user.edad" name="edad" required>
-        </div>
-        <div class="form-group">
-          <label>Estado Civil:</label>
-          <select class="form-select" aria-label="Default select example"  [(ngModel)]="user.estadoCivil" name="estadoCivil" required>
-            <option selected>Open this select menu</option>
-            <option value="Soltero">Sontero (a)</option>
-            <option value="Casado">Casdo (a)</option>
-            <option value="UNL">Union libre</option>
-          </select>
-       </div>
-        <div class="form-group">
-          <label for="ingresosMensuales">Ingresos Mensuales:</label>
-          <input type="number" class="form-control" id="ingresosMensuales" [(ngModel)]="user.ingresosMensuales" name="ingresosMensuales" required>
-        </div>
-      </div>
+  <div class="row">
+    <div class="col-md-6"><br>
+      <form (ngSubmit)="register()">
+        <div *ngIf="activeStepIndex === 0" >
+          <h4>Datos Personales</h4><br>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="tipodocumento">Tipo de Documento:</label>
+              <select class="form-select" id="tipodocumento" aria-label="Default select example"  [(ngModel)]="user.tipoDocumento" name="tipodocumento" required>
+                <option selected>Open this select menu</option>
+                <option value="CC">CC</option>
+                <option value="NIT">NIT</option>
+                <option value="PAS">PAS</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="nrodocumento">Número de Documento:</label>
+              <input type="text" id="nrodocumento"  [(ngModel)]="user.nroDocumento" name="nrodocumento" class="form-control"  required>
+            </div>
+            <div class="form-group">
+              <label for="nombre">Nombre:</label>
+              <input type="text" class="form-control" id="nombre" [(ngModel)]="user.nombre" name="nombre" required>
+            </div>
+            <div class="form-group">
+              <label for="apellido">Apellido:</label>
+              <input type="text" class="form-control" id="apellido" [(ngModel)]="user.apellidos" name="apellido" required>
+            </div>
+            <div class="form-group">
+              <label>Sexo:</label>
+              <select class="form-select" aria-label="Default select example"  [(ngModel)]="user.sexo" name="sexo" required>
+                <option selected>Open this select menu</option>
+                <option value="F">Femenino</option>
+                <option value="M">Masculino</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Estado Civil:</label>
+              <select class="form-select" aria-label="Default select example"  [(ngModel)]="user.estadoCivil" name="estadoCivil" required>
+                <option selected>Open this select menu</option>
+                <option value="Soltero">Soltero (a)</option>
+                <option value="Casado">Casado (a)</option>
+                <option value="Divorciado">Divorciado (a)</option>
+                <option value="Viudo">Viudo (a)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="fechaNacimiento">Fecha de Nacimiento (YYYY-MM-DD):</label>
+              <input id="fechaNacimiento" class="form-control" type="date"  [(ngModel)]="user.fechanacimiento" name="fechaNcimiento" />
 
-      <div *ngIf="activeStepIndex === 1">
-        <h4>Cuenta</h4>
-        <div class="form-group">
-          <label for="email2">Email:</label>
-          <input type="email" class="form-control" id="email2" [(ngModel)]="user.email" name="email2" required>
-        </div>
-        <div class="form-group">
-          <label for="clave2">Clave:</label>
-          <input type="password" class="form-control" id="clave2" [(ngModel)]="user.clave" name="clave2" required>
-        </div>
-      </div>
-
-
-      <div *ngIf="activeStepIndex === 2">
-        <h4>Configuraciones</h4>
-        <div formArrayName="configuraciones">
-          <div *ngFor="let tipo of tiposConfiguracion; let tipoIndex = index" class="mb-4">
-            <div *ngIf="tipoIndex === activeTipoIndex" class="card">
-              <div class="card-header">
-                <h5 class="mb-0">{{ tipo }}</h5>
-              </div>
-              <div class="card-body">
-                <div *ngFor="let configuracion of getFilteredConfiguraciones(tipo).controls; let i = index" [formGroupName]="i" class="mb-3">
-                  <input type="checkbox" class="form-check-input" [formControlName]="'selected'" [value]="configuracion.value.preferenciasID">
-                  <label class="form-check-label">
-                    {{ configuracion.value.tipoConfiguracion }} - {{ configuracion.value.clasificacionConfiguracion }}
-                  </label>
-
-                  <ul>
-                    <li *ngFor="let key of objectKeys(configuracion.value.datosConfiguracion)" class="list-group-item">
-                      {{ key }}: {{ configuracion.value.datosConfiguracion[key] }}
-                    </li>
-                  </ul>
+              <!-- Mostrar mensajes de error para la fecha de nacimiento -->
+              <div *ngIf="registroForm.get('fechaNacimiento')?.touched && registroForm.get('fechaNacimiento')?.invalid">
+                <div *ngIf="registroForm.get('fechaNacimiento')?.errors?.['required']">
+                  La fecha de nacimiento es obligatoria.
+                </div>
+                <div *ngIf="registroForm.get('fechaNacimiento')?.errors?.['invalidFormat']">
+                  El formato de la fecha es incorrecto. Use el formato YYYY-MM-DD.
+                </div>
+                <div *ngIf="registroForm.get('fechaNacimiento')?.errors?.['invalidDate']">
+                  La fecha ingresada no es válida o está en el futuro.
                 </div>
               </div>
             </div>
-            <div *ngIf="tipoIndex === activeTipoIndex" class="mt-3">
-              <button type="button" class="btn btn-secondary" (click)="previousTipo()" [disabled]="activeTipoIndex === 0">Anterior</button>
-              <button type="button" class="btn btn-primary" (click)="nextTipo()" [disabled]="activeTipoIndex === tiposConfiguracion.length - 1">Siguiente</button>
+            <div class="form-group">
+              <label for="celular">Celular:</label>
+              <input type="text" id="celular" class="form-control" [(ngModel)]="user.celular" name="celular" required>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="activeStepIndex === 1">
+          <h4>Cuenta</h4>
+          <div class="form-group">
+            <label for="email2">Email:</label>
+            <input type="email" class="form-control" id="email2" [(ngModel)]="user.email" name="email2" required>
+          </div>
+          <div class="form-group">
+            <label for="clave2">Clave:</label>
+            <input type="password" class="form-control" id="clave2" [(ngModel)]="user.clave" name="clave2" required>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <button type="button" class="btn btn-secondary" (click)="previousStep()" [disabled]="activeStepIndex === 0">Anterior</button>
+          <button type="button" class="btn btn-primary" (click)="nextStep()" *ngIf="activeStepIndex < steps.length - 1">Siguiente</button>
+          <button type="submit" class="btn btn-success" *ngIf="activeStepIndex === steps.length - 1">Registrar</button>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h4>Progreso</h4>
+        </div>
+        <div class="card-body">
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" [style.width.%]="(activeStepIndex + 1) * 100 / steps.length" [attr.aria-valuenow]="(activeStepIndex + 1) * 100 / steps.length" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <div class="mt-3">
+            <div *ngFor="let step of steps; let i = index">
+              <div class="d-flex justify-content-between">
+                <div>{{ step }}</div>
+                <div>{{ i + 1 === activeStepIndex ? '✅' : '' }}</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-
-      <div class="mt-3">
-        <button type="button" class="btn btn-secondary" (click)="previousStep()" [disabled]="activeStepIndex === 0">Anterior</button>
-        <button type="button" class="btn btn-primary" (click)="nextStep()" *ngIf="activeStepIndex < steps.length - 1">Siguiente</button>
-        <button type="submit" class="btn btn-success" *ngIf="activeStepIndex === steps.length - 1">Registrar</button>
-      </div>
-    </form>
     </div>
   </div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 </div>
-

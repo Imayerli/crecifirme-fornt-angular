@@ -12,6 +12,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 import { NavigationComponent } from  './navigation/navigation.component';
 import { RegisterComponent } from './user/register/register.component';
 import {UpdateComponent} from "./user/update/update.component";
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 export function tokenGetter() {
   return localStorage.getItem('auth-token');
@@ -38,7 +39,8 @@ export function tokenGetter() {
         disallowedRoutes: ['your-api-url.com/']
       }
     }),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BsDatepickerModule.forRoot()
   ],
   providers: [
     provideClientHydration(),

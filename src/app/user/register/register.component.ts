@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { Configuracion } from '../../model/Configuracion';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { ConfiguracionService } from '../../services/configuracion.service';
 
 @Component({
@@ -12,50 +12,51 @@ import { ConfiguracionService } from '../../services/configuracion.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
+  errorMessage: string = '';
   registroForm: FormGroup;
   configuraciones: { [key: string]: Configuracion[] } = {};
   activeStepIndex = 0;
-  steps = ['Datos Personales', 'Cuenta', 'Configuraciones'];
-  tiposConfiguracion: string[] = ['Notificaciones', 'Alertas', 'ContenidosFinancieros', 'PreferenciasFinancieras'];
+  steps = ['Datos Personales', 'Cuenta'];
   activeTipoIndex = 0;
   user = {
+    tipoDocumento: '',
+    nroDocumento: '',
     nombre: '',
-    edad: null,
+    apellidos: '',
+    sexo: '',
+    fechanacimiento: '',
     estadoCivil: '',
-    ingresosMensuales: null,
-    preferenciasFinancieras: '',
+    celular: '',
     email: '',
     clave: ''
   };
 
   constructor(private authService: UserService, private router: Router, private fb: FormBuilder, private configuracionService: ConfiguracionService) {
     this.registroForm = this.fb.group({
+      tipoDocumento: ['', Validators.required],
+      nroDocumento: ['', Validators.required],
       nombre: ['', Validators.required],
-      edad: ['', Validators.required],
+      apellidos: ['', Validators.required],
+      sexo: ['', Validators.required],
+      fechaNacimiento: ['', [Validators.required, this.dateValidator]],
       estadoCivil: ['', Validators.required],
-      ingresosMensuales: ['', Validators.required],
+      celular: ['', Validators.required],
       clave: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      configuraciones: this.fb.array([])
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 
   ngOnInit(): void {
-    this.tiposConfiguracion.forEach(tipo => {
-      this.configuracionService.getConfiguracionesByTipo(tipo).subscribe((data: Configuracion[]) => {
-        this.configuraciones[tipo] = data;
-        this.initConfiguraciones();
-      });
-    });
   }
 
   async register() {
     try {
-      const response = await this.authService.register(this.user);
+      console.log('Registering user', this.user)
+      const response = await this.authService.registerUser(this.user);
       console.log('Registration successful', response);
       this.router.navigate(['/login']);
     } catch (error) {
-      console.error('Registration failed', error);
+      this.errorMessage = 'El registro del usuario es no se pudo realizar, verifique los datos ingresados';
     }
   }
 
@@ -63,21 +64,6 @@ export class RegisterComponent implements OnInit {
     return this.registroForm.get('configuraciones') as FormArray;
   }
 
-  initConfiguraciones() {
-    this.tiposConfiguracion.forEach(tipo => {
-      const configs = this.configuraciones[tipo] || [];
-      configs.forEach(config => {
-        const group = this.fb.group({
-          preferenciasID: [config.preferenciasID],
-          tipoConfiguracion: [config.tipoConfiguracion],
-          clasificacionConfiguracion: [config.clasificacionConfiguracion],
-          datosConfiguracion: this.fb.group(config.datosConfiguracion),
-          selected: [false]
-        });
-        this.configuracionesFormArray.push(group);
-      });
-    });
-  }
 
   nextStep() {
     if (this.activeStepIndex < this.steps.length - 1) {
@@ -91,11 +77,6 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  nextTipo() {
-    if (this.activeTipoIndex < this.tiposConfiguracion.length - 1) {
-      this.activeTipoIndex++;
-    }
-  }
 
   previousTipo() {
     if (this.activeTipoIndex > 0) {
@@ -103,31 +84,29 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  onSubmit() {
-    console.log(this.registroForm.value);
-    // Lógica para enviar el formulario al backend
-  }
-
-  isString(value: any): boolean {
-    return typeof value === 'string';
-  }
-
-  isArray(value: any): boolean {
-    return Array.isArray(value);
-  }
 
   objectKeys(obj: any): string[] {
     return Object.keys(obj);
   }
 
-  getFilteredConfiguraciones(tipo: string): FormArray {
-    const formArray = this.fb.array([]);
-    this.configuracionesFormArray.controls.forEach(control => {
-      if (control.value.tipoConfiguracion === tipo) {
-        // @ts-ignore
-        formArray.push(control);
-      }
-    });
-    return formArray;
+// Validador personalizado para la fecha de nacimiento
+  dateValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const value = control.value;
+
+    // Validación del formato de la fecha (YYYY-MM-DD)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return { invalidFormat: true };
+    }
+
+    const inputDate = new Date(value);
+    const today = new Date();
+
+    // Verificar que la fecha es válida y no está en el futuro
+    if (isNaN(inputDate.getTime()) || inputDate >= today) {
+      return { invalidDate: true };
+    }
+
+    return null; // La validación es exitosa
   }
+
 }

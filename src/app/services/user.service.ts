@@ -59,6 +59,7 @@ export class UserService {
     });
   }
 
+
   logout() {
     if (this.isLocalStorageAvailable()) {
       localStorage.removeItem(this.tokenKey);
@@ -74,8 +75,48 @@ export class UserService {
     return false;
   }
 
-  register(user: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, user);
+
+  registerUser(user: {
+    tipoDocumento: String,
+    nroDocumento: String,
+    nombre: String,
+    apellidos: String,
+    sexo: String,
+    fechanacimiento: String,
+    estadoCivil: String,
+    celular: String,
+    email: String,
+    clave: String
+  }){
+    const randomText = this.generateRandomText(4); // Genera un texto aleatorio de 4 caracteres
+    const randomNumber = this.generateRandomNumber(100, 999); // Genera un número aleatorio entre 100 y 999
+    const userRegister = {
+      tipodocumento: user.tipoDocumento.trim(),
+      nrodocumento: user.nroDocumento.trim(),
+      nombres: user.nombre.trim(),
+      apellidos: user.apellidos.trim(),
+      sexo: user.sexo.trim(),
+      fechanacimiento: user.fechanacimiento.trim(),
+      estadocivil: user.estadoCivil.trim(),
+      celular: user.celular.trim(),
+      correo: user.email.trim(),
+      usuario: `user${randomText}${randomNumber}`,
+      clave: user.clave.trim()
+
+    };
+    return this.http.post(`${this.apiUrl}`, userRegister).pipe(
+      catchError(error => {
+        console.error('Se genero error al crear el usuario:', error);
+        return throwError(error);
+      })
+    ).subscribe((response: any) => {
+      if (response && response.user) {
+        this.user = response.user;
+        alert('Se creo correctamente el usuario');
+      } else {
+        console.error('Se genero error al crear el usuario');
+      }
+    });
   }
 
   getUser(): User  {
@@ -92,4 +133,18 @@ export class UserService {
     return this.http.put(`/api/usuarios/${user.id}`, user);
   }
 
+
+  generateRandomText(length: number): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+    }
+    return result;
+  }
+
+  generateRandomNumber(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 }
