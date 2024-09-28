@@ -60,11 +60,6 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  get configuracionesFormArray(): FormArray {
-    return this.registroForm.get('configuraciones') as FormArray;
-  }
-
-
   nextStep() {
     if (this.activeStepIndex < this.steps.length - 1) {
       this.activeStepIndex++;
@@ -75,18 +70,6 @@ export class RegisterComponent implements OnInit {
     if (this.activeStepIndex > 0) {
       this.activeStepIndex--;
     }
-  }
-
-
-  previousTipo() {
-    if (this.activeTipoIndex > 0) {
-      this.activeTipoIndex--;
-    }
-  }
-
-
-  objectKeys(obj: any): string[] {
-    return Object.keys(obj);
   }
 
 // Validador personalizado para la fecha de nacimiento
