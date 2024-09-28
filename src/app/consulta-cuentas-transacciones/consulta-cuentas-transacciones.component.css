@@ -1,0 +1,31 @@
+.card {
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+.card-header {
+  background-color: #007bff;
+  color: white;
+}
+
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.list-group-item-action.active {
+  background-color: #f8f9fa;
+  color: #000;
+  font-weight: bold;
+}
+
+.list-group-item + .list-group-item {
+  border-top: 1px solid #e9ecef;
+}
+
+.list-group-item:last-child {
+  border-bottom: 1px solid #e9ecef;
+}

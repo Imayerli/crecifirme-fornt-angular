@@ -1,0 +1,30 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Consulta de Cuentas y Transacciones</h2>
+  <div class="row">
+    <div class="col-md-12" *ngFor="let cuenta of cuentasConTransacciones">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="card-title">{{ cuenta.nombre }}</h5>
+          <span class="badge bg-primary">{{ cuenta.categoria }}</span>
+        </div>
+        <div class="card-body">
+          <p class="card-text">Descripción: {{ cuenta.descripcion }}</p>
+          <p class="card-text">Saldo: ${{ cuenta.saldo }}</p>
+        </div>
+      </div>
+
+      <div class="list-group mb-4">
+        <h6 class="list-group-item list-group-item-action active" aria-current="true">Transacciones</h6>
+        <div *ngFor="let transaccion of cuenta.transacciones">
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ transaccion.tipoTransaccion }}:</strong> ${{ transaccion.monto }} - {{ transaccion.descripcion }}
+            </div>
+            <small class="text-muted">{{ transaccion.fechaCreacion | date: 'short' }}</small>
+          </div>
+        </div>
+        <p class="list-group-item" *ngIf="cuenta.transacciones.length === 0">No hay transacciones registradas para esta cuenta.</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,27 +1,23 @@
-<div>
-  <div class="row">
-    <div class="col-md-6">
-      <h4>¡Bienvenido a la página de inicio!</h4>
-      <p>Esta es la página de inicio de nuestra aplicación.</p>
-      <p>En esta página podrás:</p>
-      <ul>
-        <li>Ver un resumen de tus finanzas personales</li>
-        <li>Ver un resumen de tus metas financieras</li>
-        <li>Ver un resumen de tus inversiones</li>
-        <li>Ver un resumen de tus gastos</li>
-        <li>Ver un resumen de tus ingresos</li>
-        <li>Ver un resumen de tus deudas</li>
-      </ul>
+<div class="container mt-4">
+  <h1>Gestión de Cuentas y Transacciones</h1>
 
-      <div class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </div>
-      <div class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </div>
+  <!-- Menú de Navegación -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" (click)="showCreateSection()" style="cursor:pointer;">Crear Cuentas/Transacciones</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" (click)="showConsultaSection()" style="cursor:pointer;">Consultar Cuentas/Transacciones</a>
+    </li>
+  </ul>
 
-    </div>
+  <!-- Sección para Crear Cuentas y Transacciones -->
+  <div *ngIf="isCreateSectionVisible">
+    <app-crear-cuentas-transacciones></app-crear-cuentas-transacciones>
+  </div>
+
+  <!-- Sección para Consultar Cuentas y Transacciones -->
+  <div *ngIf="!isCreateSectionVisible">
+    <app-consulta-cuentas-transacciones></app-consulta-cuentas-transacciones>
   </div>
 </div>

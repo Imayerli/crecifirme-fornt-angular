@@ -1,0 +1,84 @@
+<div class="container mt-4">
+  <!-- Menú de Navegación -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'cuenta'" (click)="setActiveTab('cuenta')">Crear Cuenta</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'transaccion'" (click)="setActiveTab('transaccion')">Crear Transacción</a>
+    </li>
+  </ul>
+
+  <!-- Formulario para Crear Cuenta -->
+  <div *ngIf="activeTab === 'cuenta'" class="mt-4">
+    <div class="alert" *ngIf="alertMessage" [ngClass]="{'alert-success': alertType === 'success', 'alert-danger': alertType === 'danger'}">
+      {{ alertMessage }}
+    </div>
+
+    <form [formGroup]="cuentaForm" (ngSubmit)="onSubmitCuenta()">
+      <div class="form-group">
+        <label for="nombre">Nombre de la Cuenta:</label>
+        <input type="text" id="nombre" formControlName="nombre" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="categoria">Categoría:</label>
+        <select id="categoriacuenta" formControlName="categoria" class="form-control" required>
+          <option value="" disabled selected>Selecciona una categoría</option>
+          <option *ngFor="let categoria of categoriascuenta" [value]="categoria">{{ categoria }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="descripcion">Descripción:</label>
+        <input type="text" id="descripcioncuenta" formControlName="descripcion" class="form-control" required />
+      </div>
+      <div class="form-group">
+        <label for="saldo">Saldo Inicial:</label>
+        <input type="number" id="saldo" formControlName="saldo" class="form-control" required min="0" />
+      </div>
+      <button type="submit" class="btn btn-primary" [disabled]="cuentaForm.invalid">Crear Cuenta</button>
+    </form>
+  </div>
+
+  <!-- Formulario para Crear Transacción -->
+  <div *ngIf="activeTab === 'transaccion'" class="mt-4">
+    <div class="container mt-4">
+      <h3>Crear Transacción</h3>
+
+      <!-- Mensajes de alerta -->
+      <div *ngIf="alertMessage" class="alert" [ngClass]="{'alert-success': alertType === 'success', 'alert-danger': alertType === 'danger'}">
+        {{ alertMessage }}
+      </div>
+
+      <form [formGroup]="transaccionForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="monto">Monto:</label>
+          <input type="number" id="monto" formControlName="monto" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label for="tipoTransaccion">Tipo de Transacción:</label>
+          <select id="tipoTransaccion" formControlName="tipoTransaccion" class="form-control" required>
+            <option *ngFor="let tipo of tiposTransaccion" [value]="tipo">{{ tipo }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="categoria">Categoría:</label>
+          <select id="categoria" formControlName="categoria" class="form-control" required>
+            <option *ngFor="let categoria of categorias" [value]="categoria">{{ categoria }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="descripcion">Descripción:</label>
+          <input type="text" id="descripcion" formControlName="descripcion" class="form-control" required />
+        </div>
+        <div class="form-group">
+          <label for="cuentaID">Cuenta:</label>
+          <select id="cuentaID" formControlName="cuentaID" class="form-control" required>
+            <option *ngFor="let cuenta of cuentas" [value]="cuenta.cuentaID">{{ cuenta.nombre }}</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="transaccionForm?.invalid">Crear Transacción</button>
+      </form>
+
+    </div>
+  </div>
+</div>

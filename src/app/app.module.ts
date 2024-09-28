@@ -13,6 +13,8 @@ import { NavigationComponent } from  './navigation/navigation.component';
 import { RegisterComponent } from './user/register/register.component';
 import {UpdateComponent} from "./user/update/update.component";
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { CrearCuentasTransaccionesComponent } from './crear-cuentas-transacciones/crear-cuentas-transacciones.component';
+import { ConsultaCuentasTransaccionesComponent } from './consulta-cuentas-transacciones/consulta-cuentas-transacciones.component';
 
 export function tokenGetter() {
   return localStorage.getItem('auth-token');
@@ -26,7 +28,9 @@ export function tokenGetter() {
     WelcomeComponent,
     NavigationComponent,
     RegisterComponent,
-    UpdateComponent
+    UpdateComponent,
+    CrearCuentasTransaccionesComponent,
+    ConsultaCuentasTransaccionesComponent
   ],
   imports: [
     BrowserModule,
